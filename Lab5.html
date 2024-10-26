@@ -43,7 +43,7 @@
                 <div class="form-group">
                     <label for="emailaddr">Email Address:</label>
                     <input type="email" class="form-control" id="emailaddr">
-                    <small id = "Extra_Note"><i>PlEASE NOTE: We <b> WILL</b> sell your email and private information to third parties. Deal with it!</i></small>
+                    <small id="Extra_Note"><i>PlEASE NOTE: We <b> WILL</b> sell your email and private information to third parties. Deal with it!</i></small>
                 </div>
             </form>
         </div>
@@ -52,7 +52,7 @@
                 <div class="form-group">
                     <label for="password">Password:</label>
                     <input type="password" class="form-control" id="password">
-                    <small id = "Extra_Note_2"><i>Passwords must be at least eight characters in length and contain one special character.</i></small>
+                    <small id="Extra_Note_2"><i>Passwords must be at least eight characters in length and contain one special character.</i></small>
                 </div>
             </form>
         </div>
@@ -68,13 +68,23 @@
         </div>
     </div>
     <br/>
-    <br/>
-    <div class = "row justify-content-center">
-        <div class = "col-md-8">
-            <button type = "button" id = "submit">Submit Order</button>
+    <div class="row justify-content-center">
+        <div class="col-sm-2 d-flex align-items-center">
+            <label for="captcha" id="Captcha" class="me-2"></label>
+            <input type="text" class="form-control form-control-sm" id="answer" style="width: 60px;"> <br/>
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <button type="button" id="SubmitReg" onclick="ValidateRegistrationInformation()">SUBMIT REGISTRATION</button>
         </div>
     </div>
     <br/>
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <label for="DomTxt" id="DomTxt"></label>
+        </div>
+    </div>
     <br/>
     <br/>
     <div class="container">
@@ -87,7 +97,44 @@
 </body>
 </html>
 
-<script tpye = "text/javascript">
-    
+<script type="text/javascript">
+    var num1 = Math.floor(Math.random() * 9) + 1;
+    var num2 = Math.floor(Math.random() * 9) + 1;
+    var correct_answer = num1+num2;
+    document.getElementById("Captcha").innerHTML = "What is " + num1 + " + " + num2 + " ?";
 
+    function ValidateRegistrationInformation() {
+        const user = {
+            firstName: document.getElementById("fname").value,
+            lastName: document.getElementById("lname").value,
+            dob: document.getElementById("dob").value,
+            email: document.getElementById("emailaddr").value,
+            password: document.getElementById("password").value,
+            cap_answer: document.getElementById("answer").value
+        };
+
+        for (let key in user)
+        {
+            if (user[key].trim() === "")
+            {
+                alert(`Please fill in the ${key} field.`);
+                return;
+            }
+        }
+
+        if ((user.password.length < 8) || !(user.password.includes("!") || user.password.includes("?")))
+        {
+            alert("Passwords must be 8 or greater characters and contain a special character");
+            return;
+        }
+        
+        if (parseInt(user.cap_answer,10) != correct_answer)
+        {
+            alert("YOU HAVE ENTERED THE WRONG CAPTCHA. HOW THAT'S EVEN POSSIBLE I DO NOT KNOW. DID YOU PASS THE FIRST GRADE, IDIOT?");
+            return;
+        }
+        let s_char = "*";
+        let temp_pw = s_char.repeat(user.password.length-1);
+        document.getElementById("DomTxt").innerHTML = "<i>Thank you for joining CSC225Cheat.com!</i><br/> Your Registration Information:</br>" + "Name: " + user.firstName + " " + user.lastName + "<br/> DOB: " + user.dob + "<br/>Email: " + user.email + "<br/>Password: <b>" + user.password[0] + "</b>" + temp_pw;
+    }
 </script>

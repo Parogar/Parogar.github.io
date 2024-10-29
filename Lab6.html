@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>CSC 225 Lab 5</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="jumbotron">
+            <h1 class="display-4"><i><u><b>API UPDATE INFORMATION</b></u></i>
+            </h1>
+        </div>
+        <br />
+        <br />
+        <div class="row justify-content-center">
+            <div class="col-sm-4">
+                <button type="button" id="btn1" onclick="GetData()"> CLICK ME!</button>
+            </div>
+        </div>
+        <br/>
+        <br/>
+        <div class="row justify-content-center">
+            <div class="col-sm-4">
+                <div class="label" id="lbl1">
+                    <B>NO FACTS LOADED. PLEASE CLICK THE BUTTON.</B>
+                </div>
+            </div>
+        </div>
+
+</body>
+
+
+<script type="text/javascript">
+
+    async function GetData() {
+        const url = "https://brianobruno.github.io/cats.json";
+        const response = await fetch(url);
+        const data = await response.json();
+        data.facts.sort((a, b) => a.factId - b.factId);
+      let strbuilder = `<p><table style = "width:100%"><tr><th><b>Fact Number#</b></th><th><b>Fact</b></th></tr>`;
+        for (let i of data.facts) {
+              strbuilder+="<tr><td>" + i.factId + "</td><td>" + i.text + "</td></tr>";
+        }
+
+        strbuilder+="</table></p>";
+        document.getElementById("lbl1").innerHTML=strbuilder;
+    }
+
+
+
+</script>

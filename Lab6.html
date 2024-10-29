@@ -16,7 +16,7 @@
 
     <div class="container">
         <div class="jumbotron">
-            <h1 class="display-4"><i><u><b>API UPDATE INFORMATION</b></u></i>
+            <h1 class="display-4"><i><u><b>PLEASE CLICK THE BUTTON TO RETIREVE INFORMATION FROM THE API</b></u></i>
             </h1>
         </div>
         <br />
@@ -26,8 +26,8 @@
                 <button type="button" id="btn1" onclick="GetData()"> CLICK ME!</button>
             </div>
         </div>
-        <br/>
-        <br/>
+        <br />
+        <br />
         <div class="row justify-content-center">
             <div class="col-sm-4">
                 <div class="label" id="lbl1">
@@ -35,7 +35,11 @@
                 </div>
             </div>
         </div>
-
+        <div class="row justify-content-center">
+            <div class="col-sm-4">
+                <img src="cat.png" id="img1" />
+            </div>
+        </div>
 </body>
 
 
@@ -46,13 +50,14 @@
         const response = await fetch(url);
         const data = await response.json();
         data.facts.sort((a, b) => a.factId - b.factId);
-      let strbuilder = `<p><table style = "width:100%"><tr><th><b>Fact Number#</b></th><th><b>Fact</b></th></tr>`;
+        let strbuilder = `<p><table style = "width:100%"><tr><th><b>Fact Number#</b></th><th><b>Fact</b></th></tr>`;
         for (let i of data.facts) {
-              strbuilder+="<tr><td>" + i.factId + "</td><td>" + i.text + "</td></tr>";
+            strbuilder += "<tr><td>" + i.factId + "</td><td>" + i.text + "</td></tr>";
         }
 
-        strbuilder+="</table></p>";
-        document.getElementById("lbl1").innerHTML=strbuilder;
+        strbuilder += "</table></p>";
+        document.getElementById("lbl1").innerHTML = strbuilder;
+        document.getElementById("img1").src=data.catPhoto
     }
 
 

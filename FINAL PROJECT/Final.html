@@ -12,7 +12,7 @@
         integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
         crossorigin="anonymous"></script>
     <body>
-        <div class="text-bg-warning p-3"><b>LEAGUE OF LEGENDS!!!!</b></div>
+        <div class="text-bg-warning p-3 d-flex justify-content-center align-items-center"><b>LEAGUE OF LEGENDS!!!!</b>&emsp;<b>(Final Project by Kevin Weinberg for CSC 225)</b></div>
         <div class="bg-image"
      style="background-image: url('Kayle_42.jpg'); height: 100vh; background-size: cover;">
 </div>
@@ -24,7 +24,7 @@
             </div>
             <div class="mb-3">
               <label id="server_region" class="form-label">Please Select Region Tag</label>
-              <select class="form-select">
+              <select id ="selected_region" class="form-select">
                 <option value="NA1">NA1</option>
                 <option value="EUW1">EUW1</option>
                 <option value="BR1">BR1</option>
@@ -42,8 +42,23 @@
                 <option value="VN2">VN2</option>
               </select>
             </div>
-            <button type="submit" class="btn btn-primary w-100">Submit</button>
+            <button type="submit" class="btn btn-primary w-100" onclick="Process()">Submit</button>
           </form>
 
     </body>
 </head>
+
+<script type = "text/javascript">
+    function Process() {  
+      if (document.getElementById('txtName').value == '') {
+        alert("No Player name was entered!");
+        return;
+      }
+      const Region = document.getElementById('selected_region');
+      const Tag = Region.options[Region.selectedIndex].text;
+    }
+       
+    
+    
+    
+</script>

@@ -13,6 +13,8 @@
     integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
     crossorigin="anonymous"></script>
 
+</head>
+
 <body>
 
   <div class="text-bg-warning p-3 d-flex justify-content-center align-items-center"><b>LEAGUE OF
@@ -55,7 +57,7 @@
   </form>
 
 </body>
-</head>
+
 
 <script type="text/javascript">
   const API_KEY = "RGAPI-fe468af1-21a3-4b5c-9400-057bb19dc77c";
@@ -67,18 +69,18 @@
     const data = await fetch(URL);
     const status = await data.json();
     var Str = "Response: "
-    Str+=data.status + "<br/>";
-    if (status.maintenances.length===0) {
-      Str+=" SERVER LIVE<br/>NO MAINTENANCE REPORTED.";
+    Str += data.status + "<br/>";
+    if (status.maintenances.length === 0) {
+      Str += " SERVER LIVE<br/>NO MAINTENANCE REPORTED.";
     }
     else
-      Str+="SERVER MAINTENANCE REPORTED!";
+      Str += "SERVER MAINTENANCE REPORTED!";
 
     document.getElementById("lbl1").innerHTML = "<b>" + Str + "</b>";
 
 
   }
-                  
+
   async function Process() {
     if (document.getElementById('txtName').value == '') {
       alert("No Player name was entered!");

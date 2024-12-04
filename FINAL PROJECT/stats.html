@@ -11,61 +11,22 @@
 
 <body class="d-flex flex-column justify-content-between align-items-center" style="height: 100vh;">
 
-    <!-- Header -->
     <div class="text-bg-warning p-3 w-100 text-center">
         <b>LEAGUE OF LEGENDS!!!!</b>&emsp;<b>(Final Project by Kevin Weinberg for CSC 225)</b>
+    </div>
+
+    <div class="p-5 rounded-3 w-100" style="background-color:gold;">
+        <h1 class="display-4 mb-0"><b>HERE ARE YOUR RECENTLY PLAYED MATCHES!</b></h1>
+        <p class="lead mb-0">Let's see how ya did!</p>
     </div>
 
 
     <div class="bg-image w-100 d-flex flex-column justify-content-start align-items-center"
         style="background-image: url('Kayle_lol.webp'); background-size: cover; background-position: center; height: 100vh; padding-top: 5rem;">
 
-        <div class="accordion w-50 bg-light p-3 rounded" id="accordionExample">
+        <div class="accordion w-50 p-3 rounded" id="accordionExample" style="background-color:transparent;">
 
-            <div class="accordion-item mb-4">
-                <h2 class="accordion-header" id="headingOne">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                        data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
-                        NO MATCH DATA FOUND
-                    </button>
-                </h2>
-                <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne"
-                    data-bs-parent="#accordionExample">
-                    <div class="accordion-body">
-                        ERROR!!?
-                    </div>
-                </div>
-            </div>
 
-            <div class="accordion-item mb-4">
-                <h2 class="accordion-header" id="headingTwo">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                        data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                        NO MATCH DATA FOUND
-                    </button>
-                </h2>
-                <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo"
-                    data-bs-parent="#accordionExample">
-                    <div class="accordion-body">
-                        ERROR!!?
-                    </div>
-                </div>
-            </div>
-
-            <div class="accordion-item mb-4">
-                <h2 class="accordion-header" id="headingThree">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                        data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                        NO MATCH DATA FOUND
-                    </button>
-                </h2>
-                <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree"
-                    data-bs-parent="#accordionExample">
-                    <div class="accordion-body">
-                        ERROR!!?
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 
@@ -78,7 +39,7 @@
     var player_name;
     var region;
     document.addEventListener("DOMContentLoaded", function () {
-        Load_Player(); 
+        Load_Player();
     });
 
     // Example custom function
@@ -89,10 +50,37 @@
         region = urlParams.get("region");
         var test_str = api_key + " " + player_name + " " + region;
 
-       // var URL = "https://" + Tag + ".api.riotgames.com/lol/status/v4/platform-data?api_key=" + API_KEY;
-       // const data = await fetch(URL);
-      //  const status = await data.json();
-        
+        for (let i = 1; i <= 10; i++) {
+            // Create the accordion item
+            const accordionItem = `
+                  <div class="accordion-item mb-4">
+                <h2 class="accordion-header" id="heading${i}">
+                    <button class="accordion-button collapsed" style="background-color:silver;" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapse${i}" aria-expanded="false" aria-controls="collapse${i}"
+                        onclick="handleAccordionClick(${i})">
+                        NO MATCH DATA FOUND!
+                    </button>
+                </h2>
+                <div id="collapse${i}" class="accordion-collapse collapse" aria-labelledby="heading${i}">
+                    <div class="accordion-body">
+                        ERROR!!? PLEASE DOUBLE CHEECK YOUR SUMMONER NAME AND REGION
+                    </div>
+                </div>
+            </div>`;
+            // Append the accordion item to the container
+            document.getElementById("accordionExample").innerHTML += accordionItem;
+        }
+
+         const URL = "https://americas.api.riotgames.com/riot/account/v1/accounts/by-riot-id/" + player_name + "/" + region + "?api_key=" + api_key;
+         alert(URL);
+         alert(URL);
+         const data = await fetch(URL);
+         const Player_Object = await data.json();
+         alert("URL");
+         
+        // const data = await fetch(URL);
+        //  const status = await data.json();
+
     }
 
 

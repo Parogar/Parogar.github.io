@@ -25,6 +25,31 @@
     <div class="bg-image w-100 d-flex flex-column justify-content-start align-items-center"
         style="background-image: url('Kayle_lol.webp'); background-size: cover; background-position: center; height: 100vh; padding-top: 5rem;">
 
+        
+    <div class="container mt-5">
+        <h2 class="text-center mb-4">Ranked Solo Stats</h2>
+        <div class="table-responsive">
+            <table class="table table-striped table-hover table-bordered">
+                <thead class="table-dark">
+                    <tr>
+                        <th scope="col">Tier</th>
+                        <th scope="col">Rank</th>
+                        <th scope="col">Wins</th>
+                        <th scope="col">Losses</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td id="tier">?</td>
+                        <td id="rank">?</td>
+                        <td id="wins">?</td>
+                        <td id="losses">?</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
         <div class="accordion w-50 p-3 rounded" id="accordionExample" style="background-color:transparent;">
 
 
@@ -39,6 +64,7 @@
 <script type="text/javascript">
 
     const proxyURL = "https://corsproxy.io/?";
+    var puuid; //this is VERY important because it's the ID that will allow us to do literally anything with the API!!
 
     var api_key;
     var player_name;
@@ -52,8 +78,6 @@
         api_key = urlParams.get("api_key");
         player_name = urlParams.get("player_name");
         region = urlParams.get("region");
-
-        var puuid; //this is VERY important because it's the ID that will allow us to do literally anything with the API!!
 
         for (let i = 1; i <= 10; i++) {
             const accordionItem = `
@@ -79,7 +103,6 @@
         try {
             data = await fetch(proxyURL + URL);
             if (!data.ok) {
-                //   throw new Error(`HTTP error! status: ${data.status}`);
                 document.getElementById("welcome_3").innerHTML += data.status + "<b><i> ERROR! THE API FOUND NO SUMMONER NAME FROM SELECTED REGION! MORON!!</b></i>";
                 return;
             }
@@ -95,8 +118,28 @@
         document.getElementById("welcome_1").innerHTML += "<b><i>" + Player_Object.gameName + "!</b></i>"
         document.getElementById("welcome_3").innerHTML += "<b>SUCCESS!</b> API successfully found you, summoner. Your PUUID = " + Player_Object.puuid;
 
+        await Show_Ranked_Stats(puuid);
         await Find_Matches(puuid);
 
+    }
+
+    async function Show_Ranked_Stats(puuid) {
+
+        const URL = "https://na1.api.riotgames.com/lol/summoner/v4/summoners/by-puuid/" + puuid + "?api_key=" + api_key;
+        const data = await fetch(proxyURL + URL);
+        const Summoner = await data.json();
+        const EncryptedID = Summoner.id;
+
+        const Rank_URL = "https://na1.api.riotgames.com/lol/league/v4/entries/by-summoner/" + EncryptedID + "?api_key=" + api_key;
+        const data2 = await fetch(proxyURL + Rank_URL);
+        const Ranked_Stats = await data2.json();
+
+        document.getElementById("tier").innerText = Ranked_Stats[1].tier;
+        document.getElementById("rank").innerText = Ranked_Stats[1].rank;
+        document.getElementById("wins").innerText = Ranked_Stats[1].wins;
+        document.getElementById("losses").innerText = Ranked_Stats[1].losses;
+
+        //FOR REFERENCE: https://na1.api.riotgames.com/lol/league/v4/entries/by-summoner/hxOcnA_hElLF6earXpbFcCdb2q7lxNyTzUVkYy5AFm2xcgo?api_key=RGAPI-685ec7bc-a3b3-44d5-aacc-0a6c089f5b78
     }
 
     async function Find_Matches(puuid) {
@@ -124,26 +167,79 @@
 
     }
 
-    function handleAccordionClick(a_id) {
-
-        let ac = document.getElementById("match" + a_id);
-        let btn = ac.querySelector("button");
-        let control = document.getElementById("collapse" + a_id);
-        let match_stats = control.querySelector(".accordion-body");
+    async function handleAccordionClick(a_id) {
+        // Retrieve the accordion item and its associated button
+        const ac = document.getElementById("match" + a_id);
+        const btn = ac.querySelector("button");
+        const control = document.getElementById("collapse" + a_id);
+        const match_stats = control.querySelector(".accordion-body");
         const match_str = btn.innerText;
 
-
-        let MatchStr = match_str.split("Match ID: ");
-        let MatchID = 0;
+        // Extract the Match ID from the button's inner text
+        const MatchStr = match_str.split("Match ID: ");
+        let MatchID = "";
 
         if (MatchStr.length > 1) {
             MatchID = MatchStr[1].trim();
-            alert(MatchID);
+        } else {
+            match_stats.innerText = "Error: Unable to retrieve Match ID.";
+            return;
         }
 
-       // const URL = 
+        // Construct the API URL
+        const URL = `https://americas.api.riotgames.com/lol/match/v5/matches/${MatchID}?api_key=${api_key}`;
 
-        //  match_stats.innerText = "foo";
+        try {
+            // Fetch match data from the API
+            const response = await fetch(proxyURL + URL);
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            const Match_Data = await response.json();
+
+            // Find the participant data for the specified player
+            const participant = Match_Data.info.participants.find(p => p.puuid === puuid);
+
+            if (!participant) {
+                match_stats.innerText = "Error: Participant not found in match data.";
+                return;
+            }
+
+            // Determine victory or defeat
+            const teamId = participant.teamId;
+            const team = Match_Data.info.teams.find(t => t.teamId === teamId);
+            const result = team.win ? "Victory" : "Defeat";
+
+            // Extract relevant statistics
+            const stats = {
+                'Result': result,
+                'Champion': participant.championName,
+                'Kills': participant.kills,
+                'Deaths': participant.deaths,
+                'Assists': participant.assists,
+                'KDA Ratio': ((participant.kills + participant.assists) / Math.max(1, participant.deaths)).toFixed(2),
+                'Total Damage Dealt': participant.totalDamageDealtToChampions,
+                'Gold Earned': participant.goldEarned,
+                'Vision Score': participant.visionScore,
+                'Minions Killed': participant.totalMinionsKilled,
+                'Game Duration (minutes)': (Match_Data.info.gameDuration / 60).toFixed(2)
+            };
+
+            // Create a table to display the statistics
+            let table = '<table class="table table-striped">';
+            table += '<thead><tr><th>Statistic</th><th>Value</th></tr></thead><tbody>';
+
+            for (const [key, value] of Object.entries(stats)) {
+                table += `<tr><td>${key}</td><td>${value}</td></tr>`;
+            }
+
+            table += '</tbody></table>';
+
+            // Insert the table into the accordion body
+            match_stats.innerHTML = table;
+        } catch (error) {
+            match_stats.innerText = `Error: Unable to fetch match details. ${error.message}`;
+        }
     }
     /*FOR REFERENCE IN CASE OF ISSUES:
             const proxyURL = 'https://cors-anywhere.herokuapp.com/';

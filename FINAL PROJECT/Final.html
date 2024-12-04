@@ -2,81 +2,91 @@
 <html lang="en">
 
 <head>
-    <title>CSC225 FINAL PROJECT!</title>
+    <title>
+        CSC225 FINAL PROJECT!
+    </title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css?v=1" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js?v=1" defer></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
+
 </head>
 
-<body class="d-flex flex-column justify-content-between align-items-center" style="height: 100vh;">
+<body>
 
-    <!-- Header -->
-    <div class="text-bg-warning p-3 w-100 text-center">
-        <b>LEAGUE OF LEGENDS!!!!</b>&emsp;<b>(Final Project by Kevin Weinberg for CSC 225)</b>
+    <div class="text-bg-warning p-3 d-flex justify-content-center align-items-center"><b>LEAGUE OF
+            LEGENDS!!!!</b>&emsp;<b>(Final Project by Kevin Weinberg for CSC 225)</b></div>
+    <div class="bg-image" style="background-image: url('Kayle_42.jpg'); height: 100vh; background-size: cover;">
     </div>
 
-    <!-- Main Section -->
-    <div class="bg-image w-100 d-flex flex-column justify-content-start align-items-center"
-        style="background-image: url('Kayle_lol.webp'); background-size: cover; background-position: center; height: 100vh; padding-top: 5rem;">
-
-        <!-- Outer Wrapper with Silver Border -->
-        <div style="border: 3px solid silver; border-radius: 10px; padding: 15px; background-color: white;">
-            <!-- Accordion -->
-            <div class="accordion w-50 bg-light rounded" id="accordionExample">
-                <!-- Accordion Item 1 -->
-                <div class="accordion-item mb-4">
-                    <h2 class="accordion-header" id="headingOne">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                            data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne"
-                            style="background-color: lightblue; color: black; border: none;">
-                            Accordion Item #1
-                        </button>
-                    </h2>
-                    <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne"
-                        data-bs-parent="#accordionExample">
-                        <div class="accordion-body">
-                            This is the first item's accordion body.
-                        </div>
-                    </div>
-                </div>
-                <!-- Accordion Item 2 -->
-                <div class="accordion-item mb-4">
-                    <h2 class="accordion-header" id="headingTwo">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                            data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo"
-                            style="background-color: lightblue; color: black; border: none;">
-                            Accordion Item #2
-                        </button>
-                    </h2>
-                    <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo"
-                        data-bs-parent="#accordionExample">
-                        <div class="accordion-body">
-                            This is the second item's accordion body.
-                        </div>
-                    </div>
-                </div>
-                <!-- Accordion Item 3 -->
-                <div class="accordion-item mb-4">
-                    <h2 class="accordion-header" id="headingThree">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                            data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree"
-                            style="background-color: lightblue; color: black; border: none;">
-                            Accordion Item #3
-                        </button>
-                    </h2>
-                    <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree"
-                        data-bs-parent="#accordionExample">
-                        <div class="accordion-body">
-                            This is the third item's accordion body.
-                        </div>
-                    </div>
-                </div>
-            </div>
+    <form class="position-absolute top-50 start-50 translate-middle p-4 border rounded bg-light">
+        <div class="mb-3">
+            <label id="pName">Player Name:</label>
+            <input type="text" class="form-control" id="txtName">
         </div>
-
-    </div>
+        <div class="mb-3">
+            <label id="server_region" class="form-label">Please Select Region Tag</label>
+            <select id="selected_region" class="form-select">
+                <option value="NA1">NA1</option>
+                <option value="EUW1">EUW1</option>
+                <option value="BR1">BR1</option>
+                <option value="LA1">LA1</option>
+                <option value="LA2">LA2</option>
+                <option value="OC1">OC1</option>
+                <option value="RU1">RU1</option>
+                <option value="TR1">TR1</option>
+                <option value="JP1">JP1</option>
+                <option value="KR">KR</option>
+                <option value="PH2">PH2</option>
+                <option value="SG2">SG2</option>
+                <option value="TW2">TW2</option>
+                <option value="TH2">TH2</option>
+                <option value="VN2">VN2</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary w-100" onclick="Process()">Submit</button>
+        <br />
+        <br />
+        <button type="button" class="btn btn-primary w-100" onclick="CheckStatus()">Check Server Status</button>
+        <br />
+        <br />
+        <div class="text-center" id="lbl1"></div>
+    </form>
 
 </body>
 
-</html>
+
+<script type="text/javascript">
+    const API_KEY = "RGAPI-fe468af1-21a3-4b5c-9400-057bb19dc77c";
+
+    async function CheckStatus() {
+        const Region = document.getElementById('selected_region');
+        const Tag = Region.options[Region.selectedIndex].text;
+        var URL = "https://" + Tag + ".api.riotgames.com/lol/status/v4/platform-data?api_key=" + API_KEY;
+        const data = await fetch(URL);
+        const status = await data.json();
+        var Str = "Response: "
+        Str += data.status + "<br/>";
+        if (status.maintenances.length === 0) {
+            Str += " SERVER LIVE<br/>NO MAINTENANCE REPORTED.";
+        }
+        else
+            Str += "SERVER MAINTENANCE REPORTED!";
+
+        document.getElementById("lbl1").innerHTML = "<b>" + Str + "</b>";
+
+
+    }
+
+    async function Process() {
+        if (document.getElementById('txtName').value == '') {
+            alert("No Player name was entered!");
+            return;
+        }
+        const Region = document.getElementById('selected_region');
+        const Tag = Region.options[Region.selectedIndex].text;
+    }
+</script>

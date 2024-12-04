@@ -44,15 +44,14 @@
         Load_Player();
     });
 
-    var puuid; //this is VERY important because it's the ID that will allow us to do literally anything with the API!!
-
     async function Load_Player() {
         const urlParams = new URLSearchParams(window.location.search);
         api_key = urlParams.get("api_key");
         player_name = urlParams.get("player_name");
         region = urlParams.get("region");
-        var test_str = api_key + " " + player_name + " " + region;
 
+        var puuid; //this is VERY important because it's the ID that will allow us to do literally anything with the API!!
+        
         for (let i = 1; i <= 10; i++) {
             const accordionItem = `
                   <div class="accordion-item mb-4">
@@ -77,8 +76,9 @@
         try {
             data = await fetch(proxyURL + URL);
             if (!data.ok) {
-                throw new Error('HTTP error! status: ${data.status}');
-                document.getElementById("welcome_3").innerHTML += "<b><i>ERROR! ERROR! API FOUND NO SUMMONER NAME FROM SELECTED REGION! MORON!!</b></i>"
+             //   throw new Error(`HTTP error! status: ${data.status}`);
+                document.getElementById("welcome_3").innerHTML += data.status + "<b><i> ERROR! THE API FOUND NO SUMMONER NAME FROM SELECTED REGION! MORON!!</b></i>";
+                return;
             }
         }
         catch (error) {
@@ -92,6 +92,18 @@
         document.getElementById("welcome_1").innerHTML += "<b><i>" + Player_Object.gameName + "!</b></i>"
         document.getElementById("welcome_3").innerHTML += "<b>SUCCESS!</b> API successfully found you, summoner. Your PUUID = " + Player_Object.puuid;
 
+        await Find_Matches(puuid);
+
+    }
+
+    async function Find_Matches(puuid)
+    {
+
+    }
+
+    function handleAccordionClick(a_id) {
+      //  const ac = event.target;
+     //   alert("you just expanded accordion number" + a_id);
     }
     /*FOR REFERENCE IN CASE OF ISSUES:
             const proxyURL = 'https://cors-anywhere.herokuapp.com/';

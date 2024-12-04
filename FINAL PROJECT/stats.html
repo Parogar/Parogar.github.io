@@ -134,10 +134,22 @@
         const data2 = await fetch(proxyURL + Rank_URL);
         const Ranked_Stats = await data2.json();
 
-        document.getElementById("tier").innerText = Ranked_Stats[1].tier;
-        document.getElementById("rank").innerText = Ranked_Stats[1].rank;
-        document.getElementById("wins").innerText = Ranked_Stats[1].wins;
-        document.getElementById("losses").innerText = Ranked_Stats[1].losses;
+        let modifier = 0;
+
+        if (Ranked_Stats.length===0) {
+            alert("NO RANKED STATS FOUND!");
+            return;
+        }
+        else if (Ranked_Stats.length === 1) {
+            modifier = 0;
+        }
+        else
+            modifier = 1;
+
+        document.getElementById("tier").innerText = Ranked_Stats[modifier].tier;
+        document.getElementById("rank").innerText = Ranked_Stats[modifier].rank;
+        document.getElementById("wins").innerText = Ranked_Stats[modifier].wins;
+        document.getElementById("losses").innerText = Ranked_Stats[modifier].losses;
 
         //FOR REFERENCE: https://na1.api.riotgames.com/lol/league/v4/entries/by-summoner/hxOcnA_hElLF6earXpbFcCdb2q7lxNyTzUVkYy5AFm2xcgo?api_key=RGAPI-685ec7bc-a3b3-44d5-aacc-0a6c089f5b78
     }

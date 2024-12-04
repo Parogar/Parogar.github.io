@@ -47,7 +47,7 @@
                 <option value="VN2">VN2</option>
             </select>
         </div>
-        <button type="submit" class="btn btn-primary w-100" onclick="Process()">Submit</button>
+        <button type="button" class="btn btn-primary w-100" onclick="Process()">Submit</button>
         <br />
         <br />
         <button type="button" class="btn btn-primary w-100" onclick="CheckStatus()">Check Server Status</button>
@@ -82,11 +82,20 @@
     }
 
     async function Process() {
+        var player_name = "";
+
         if (document.getElementById('txtName').value == '') {
             alert("No Player name was entered!");
             return;
         }
+        else
+            player_name = document.getElementById('txtName').value;
+
         const Region = document.getElementById('selected_region');
         const Tag = Region.options[Region.selectedIndex].text;
+
+        const targetURL = `stats.html?api_key=${API_KEY}&player_name=${encodeURIComponent(player_name)}&region=${Tag}`;
+
+        window.location.href = targetURL;
     }
 </script>

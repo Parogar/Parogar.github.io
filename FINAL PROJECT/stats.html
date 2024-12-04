@@ -15,9 +15,10 @@
         <b>LEAGUE OF LEGENDS!!!!</b>&emsp;<b>(Final Project by Kevin Weinberg for CSC 225)</b>
     </div>
 
-    <div class="p-5 rounded-3 w-100" style="background-color:gold;">
-        <h1 class="display-4 mb-0"><b>HERE ARE YOUR RECENTLY PLAYED MATCHES!</b></h1>
-        <p class="lead mb-0">Let's see how ya did!</p>
+    <div class="p-5 rounded-3 w-100" style="background-color:gold;" id="welcome">
+        <h1 class="display-4 mb-0" id="welcome_1"><b>HERE ARE YOUR RECENTLY PLAYED MATCHES: </b></h1>
+        <p class="lead mb-0" id="welcome_2">Let's see how ya did!</p>
+        <p class="lead mb-0" id ="welcome_3"></p>
     </div>
 
 
@@ -43,7 +44,8 @@
         Load_Player();
     });
 
-    // Example custom function
+    var puuid; //this is VERY important because it's the ID that will allow us to do literally anything with the API!!
+
     async function Load_Player() {
         const urlParams = new URLSearchParams(window.location.search);
         api_key = urlParams.get("api_key");
@@ -52,7 +54,6 @@
         var test_str = api_key + " " + player_name + " " + region;
 
         for (let i = 1; i <= 10; i++) {
-            // Create the accordion item
             const accordionItem = `
                   <div class="accordion-item mb-4">
                 <h2 class="accordion-header" id="heading${i}">
@@ -68,14 +69,33 @@
                     </div>
                 </div>
             </div>`;
-            // Append the accordion item to the container
             document.getElementById("accordionExample").innerHTML += accordionItem;
         }
-         const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
-         const URL = "http://americas.api.riotgames.com/riot/account/v1/accounts/by-riot-id/" + player_name + "/" + region + "?api_key=" + api_key;
-         const data = await fetch(URL);
-         const Player_Object = await data.json();
-         alert(Player_Object.);
-    }
+        const proxyURL = "https://corsproxy.io/?";
+        const URL = "https://americas.api.riotgames.com/riot/account/v1/accounts/by-riot-id/" + player_name + "/" + region + "?api_key=" + api_key;
+        let data;
+        try {
+            data = await fetch(proxyURL + URL);
+            if (!data.ok) {
+                throw new Error('HTTP error! status: ${data.status}');
+                document.getElementById("welcome_3").innerHTML += "<b><i>ERROR! ERROR! API FOUND NO SUMMONER NAME FROM SELECTED REGION! MORON!!</b></i>"
+            }
+        }
+        catch (error) {
+            alert("Please try again with a correct summoner name and region;")
+            return;
+        }
 
+        const Player_Object = await data.json();
+        puuid = Player_Object.puuid;
+
+        document.getElementById("welcome_1").innerHTML += "<b><i>" + Player_Object.gameName + "!</b></i>"
+        document.getElementById("welcome_3").innerHTML += "<b>SUCCESS!</b> API successfully found you, summoner. Your PUUID = " + Player_Object.puuid;
+
+    }
+    /*FOR REFERENCE IN CASE OF ISSUES:
+            const proxyURL = 'https://cors-anywhere.herokuapp.com/';
+            const fURL = "https://americas.api.riotgames.com/riot/account/v1/accounts/by-riot-id/Parogar/NA1?api_key=RGAPI-685ec7bc-a3b3-44d5-aacc-0a6c089f5b78";
+            const response = await fetch(proxyURL + fURL);
+            const player = await response.json(); */
 </script>

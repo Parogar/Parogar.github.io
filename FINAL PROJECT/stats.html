@@ -18,7 +18,7 @@
     <div class="p-5 rounded-3 w-100" style="background-color:gold;" id="welcome">
         <h1 class="display-4 mb-0" id="welcome_1"><b>HERE ARE YOUR RECENTLY PLAYED MATCHES: </b></h1>
         <p class="lead mb-0" id="welcome_2">Let's see how ya did!</p>
-        <p class="lead mb-0" id ="welcome_3"></p>
+        <p class="lead mb-0" id="welcome_3"></p>
     </div>
 
 
@@ -65,7 +65,7 @@
                         NO MATCH DATA FOUND!
                     </button>
                 </h2>
-                <div id="match_info${i}" class="accordion-collapse collapse" aria-labelledby="match${i}">
+                <div id="collapse${i}" class="accordion-collapse collapse" aria-labelledby="match${i}">
                     <div class="accordion-body">
                         ERROR!!? PLEASE DOUBLE CHEECK YOUR SUMMONER NAME AND REGION
                     </div>
@@ -79,7 +79,7 @@
         try {
             data = await fetch(proxyURL + URL);
             if (!data.ok) {
-             //   throw new Error(`HTTP error! status: ${data.status}`);
+                //   throw new Error(`HTTP error! status: ${data.status}`);
                 document.getElementById("welcome_3").innerHTML += data.status + "<b><i> ERROR! THE API FOUND NO SUMMONER NAME FROM SELECTED REGION! MORON!!</b></i>";
                 return;
             }
@@ -99,22 +99,52 @@
 
     }
 
-    async function Find_Matches(puuid)
-    {
+    async function Find_Matches(puuid) {
         //SAMPLE API REQUEST FOR REFERENCE https://americas.api.riotgames.com/lol/match/v5/matches/by-puuid/0JFalIdsdUlW5cos-GITaKgiwOoOfBRzPGknpH_1DhmS3Mt56cP23h88np6NtnRaFBt-sp446oQPaQ/ids?start=0&count=20&api_key=RGAPI-685ec7bc-a3b3-44d5-aacc-0a6c089f5b78
         const URL = "https://americas.api.riotgames.com/lol/match/v5/matches/by-puuid/" + puuid + "/ids?start=0&count=20&api_key=" + api_key
         const data = await fetch(proxyURL + URL);
         const Matches_List = await data.json();
 
-        if (Matches_List.length===0) {
+        if (Matches_List.length === 0) {
             alert("You have no played any matches! NOOB!");
-            return;
         }
+        else {
+            let count = Matches_List.length;
+            if (count > 10) {
+                count = 10;
+            }
+            for (let i = 1; i <= count; i++) {
+                let tempstr = "match" + i;
+                let control = document.getElementById("match" + i);
+                let btn = control.querySelector("button");
+                btn.innerText = "Match # " + i + " - Match ID: " + Matches_List[i];
 
+            }
+        }
 
     }
 
-    
+    function handleAccordionClick(a_id) {
+
+        let ac = document.getElementById("match" + a_id);
+        let btn = ac.querySelector("button");
+        let control = document.getElementById("collapse" + a_id);
+        let match_stats = control.querySelector(".accordion-body");
+        const match_str = btn.innerText;
+
+
+        let MatchStr = match_str.split("Match ID: ");
+        let MatchID = 0;
+
+        if (MatchStr.length > 1) {
+            MatchID = MatchStr[1].trim();
+            alert(MatchID);
+        }
+
+       // const URL = 
+
+        //  match_stats.innerText = "foo";
+    }
     /*FOR REFERENCE IN CASE OF ISSUES:
             const proxyURL = 'https://cors-anywhere.herokuapp.com/';
             const fURL = "https://americas.api.riotgames.com/riot/account/v1/accounts/by-riot-id/Parogar/NA1?api_key=RGAPI-685ec7bc-a3b3-44d5-aacc-0a6c089f5b78";

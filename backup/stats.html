@@ -11,89 +11,114 @@
 
 <body class="d-flex flex-column justify-content-between align-items-center" style="height: 100vh;">
 
-    <!-- Header -->
     <div class="text-bg-warning p-3 w-100 text-center">
         <b>LEAGUE OF LEGENDS!!!!</b>&emsp;<b>(Final Project by Kevin Weinberg for CSC 225)</b>
+    </div>
+
+    <div class="p-5 rounded-3 w-100" style="background-color:gold;" id="welcome">
+        <h1 class="display-4 mb-0" id="welcome_1"><b>HERE ARE YOUR RECENTLY PLAYED MATCHES: </b></h1>
+        <p class="lead mb-0" id="welcome_2">Let's see how ya did!</p>
+        <p class="lead mb-0" id ="welcome_3"></p>
     </div>
 
 
     <div class="bg-image w-100 d-flex flex-column justify-content-start align-items-center"
         style="background-image: url('Kayle_lol.webp'); background-size: cover; background-position: center; height: 100vh; padding-top: 5rem;">
 
-        <div class="accordion w-50 bg-light p-3 rounded" id="accordionExample">
+        <div class="accordion w-50 p-3 rounded" id="accordionExample" style="background-color:transparent;">
 
-            <div class="accordion-item mb-4">
-                <h2 class="accordion-header" id="headingOne">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                        data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
-                        NO MATCH DATA FOUND
-                    </button>
-                </h2>
-                <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne"
-                    data-bs-parent="#accordionExample">
-                    <div class="accordion-body">
-                        ERROR!!?
-                    </div>
-                </div>
-            </div>
 
-            <div class="accordion-item mb-4">
-                <h2 class="accordion-header" id="headingTwo">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                        data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                        NO MATCH DATA FOUND
-                    </button>
-                </h2>
-                <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo"
-                    data-bs-parent="#accordionExample">
-                    <div class="accordion-body">
-                        ERROR!!?
-                    </div>
-                </div>
-            </div>
-
-            <div class="accordion-item mb-4">
-                <h2 class="accordion-header" id="headingThree">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                        data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                        NO MATCH DATA FOUND
-                    </button>
-                </h2>
-                <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree"
-                    data-bs-parent="#accordionExample">
-                    <div class="accordion-body">
-                        ERROR!!?
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
+
 
 </body>
 
 </html>
 
 <script type="text/javascript">
+
+    const proxyURL = "https://corsproxy.io/?";
+
     var api_key;
     var player_name;
     var region;
     document.addEventListener("DOMContentLoaded", function () {
-        Load_Player(); 
+        Load_Player();
     });
 
-    // Example custom function
     async function Load_Player() {
         const urlParams = new URLSearchParams(window.location.search);
         api_key = urlParams.get("api_key");
         player_name = urlParams.get("player_name");
         region = urlParams.get("region");
-        var test_str = api_key + " " + player_name + " " + region;
 
-       // var URL = "https://" + Tag + ".api.riotgames.com/lol/status/v4/platform-data?api_key=" + API_KEY;
-       // const data = await fetch(URL);
-      //  const status = await data.json();
-        
+        var puuid; //this is VERY important because it's the ID that will allow us to do literally anything with the API!!
+
+        for (let i = 1; i <= 10; i++) {
+            const accordionItem = `
+                  <div class="accordion-item mb-4">
+                <h2 class="accordion-header" id="match${i}">
+                    <button class="accordion-button collapsed" style="background-color:silver;" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapse${i}" aria-expanded="false" aria-controls="collapse${i}"
+                        onclick="handleAccordionClick(${i})">
+                        NO MATCH DATA FOUND!
+                    </button>
+                </h2>
+                <div id="match_info${i}" class="accordion-collapse collapse" aria-labelledby="match${i}">
+                    <div class="accordion-body">
+                        ERROR!!? PLEASE DOUBLE CHEECK YOUR SUMMONER NAME AND REGION
+                    </div>
+                </div>
+            </div>`;
+            document.getElementById("accordionExample").innerHTML += accordionItem;
+        }
+
+        const URL = "https://americas.api.riotgames.com/riot/account/v1/accounts/by-riot-id/" + player_name + "/" + region + "?api_key=" + api_key;
+        let data;
+        try {
+            data = await fetch(proxyURL + URL);
+            if (!data.ok) {
+             //   throw new Error(`HTTP error! status: ${data.status}`);
+                document.getElementById("welcome_3").innerHTML += data.status + "<b><i> ERROR! THE API FOUND NO SUMMONER NAME FROM SELECTED REGION! MORON!!</b></i>";
+                return;
+            }
+        }
+        catch (error) {
+            alert("Please try again with a correct summoner name and region;")
+            return;
+        }
+
+        const Player_Object = await data.json();
+        puuid = Player_Object.puuid;
+
+        document.getElementById("welcome_1").innerHTML += "<b><i>" + Player_Object.gameName + "!</b></i>"
+        document.getElementById("welcome_3").innerHTML += "<b>SUCCESS!</b> API successfully found you, summoner. Your PUUID = " + Player_Object.puuid;
+
+        await Find_Matches(puuid);
+
     }
 
+    async function Find_Matches(puuid)
+    {
+        //SAMPLE API REQUEST FOR REFERENCE https://americas.api.riotgames.com/lol/match/v5/matches/by-puuid/0JFalIdsdUlW5cos-GITaKgiwOoOfBRzPGknpH_1DhmS3Mt56cP23h88np6NtnRaFBt-sp446oQPaQ/ids?start=0&count=20&api_key=RGAPI-685ec7bc-a3b3-44d5-aacc-0a6c089f5b78
+        const URL = "https://americas.api.riotgames.com/lol/match/v5/matches/by-puuid/" + puuid + "/ids?start=0&count=20&api_key=" + api_key
+        const data = await fetch(proxyURL + URL);
+        const Matches_List = await data.json();
 
+        if (Matches_List.length===0) {
+            alert("You have no played any matches! NOOB!");
+        }
+
+    }
+
+    function handleAccordionClick(a_id) {
+      //  const ac = event.target;
+     //   alert("you just expanded accordion number" + a_id);
+    }
+    /*FOR REFERENCE IN CASE OF ISSUES:
+            const proxyURL = 'https://cors-anywhere.herokuapp.com/';
+            const fURL = "https://americas.api.riotgames.com/riot/account/v1/accounts/by-riot-id/Parogar/NA1?api_key=RGAPI-685ec7bc-a3b3-44d5-aacc-0a6c089f5b78";
+            const response = await fetch(proxyURL + fURL);
+            const player = await response.json(); */
 </script>

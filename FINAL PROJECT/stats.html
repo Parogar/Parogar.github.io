@@ -30,7 +30,6 @@
         </div>
     </div>
 
-    <button id="btn1" onclick = "test()">click me</button>
 
 </body>
 
@@ -72,25 +71,11 @@
             // Append the accordion item to the container
             document.getElementById("accordionExample").innerHTML += accordionItem;
         }
-
+         const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
          const URL = "http://americas.api.riotgames.com/riot/account/v1/accounts/by-riot-id/" + player_name + "/" + region + "?api_key=" + api_key;
          const data = await fetch(URL);
-         console.log(data);
          const Player_Object = await data.json();
-         alert("data");
-
-         
-        // const data = await fetch(URL);
-        //  const status = await data.json();
+         alert(Player_Object.);
     }
-    async function test() {
-        const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
-        const url = "https://americas.api.riotgames.com/riot/account/v1/accounts/by-riot-id/Parogar/NA1?api_key=RGAPI-685ec7bc-a3b3-44d5-aacc-0a6c089f5b78";
-        const data = await fetch(proxyUrl + url);
-   //     const obj = data.json();
-        alert(obj);
-
-    }
-
 
 </script>

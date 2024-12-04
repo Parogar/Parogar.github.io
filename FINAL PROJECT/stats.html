@@ -37,6 +37,9 @@
 </html>
 
 <script type="text/javascript">
+
+    const proxyURL = "https://corsproxy.io/?";
+
     var api_key;
     var player_name;
     var region;
@@ -51,7 +54,7 @@
         region = urlParams.get("region");
 
         var puuid; //this is VERY important because it's the ID that will allow us to do literally anything with the API!!
-        
+
         for (let i = 1; i <= 10; i++) {
             const accordionItem = `
                   <div class="accordion-item mb-4">
@@ -70,7 +73,7 @@
             </div>`;
             document.getElementById("accordionExample").innerHTML += accordionItem;
         }
-        const proxyURL = "https://corsproxy.io/?";
+
         const URL = "https://americas.api.riotgames.com/riot/account/v1/accounts/by-riot-id/" + player_name + "/" + region + "?api_key=" + api_key;
         let data;
         try {
@@ -98,7 +101,12 @@
 
     async function Find_Matches(puuid)
     {
-
+        //SAMPLE API REQUEST FOR REFERENCE https://americas.api.riotgames.com/lol/match/v5/matches/by-puuid/0JFalIdsdUlW5cos-GITaKgiwOoOfBRzPGknpH_1DhmS3Mt56cP23h88np6NtnRaFBt-sp446oQPaQ/ids?start=0&count=20&api_key=RGAPI-685ec7bc-a3b3-44d5-aacc-0a6c089f5b78
+        const URL = "https://americas.api.riotgames.com/lol/match/v5/matches/by-puuid/" + puuid + "/ids?start=0&count=20&api_key=" + api_key
+        alert(URL);
+        const data = await fetch(proxyURL + URL);
+        const Matches_List = await data.json();
+        console.log('test');
     }
 
     function handleAccordionClick(a_id) {

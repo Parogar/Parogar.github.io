@@ -60,12 +60,13 @@
 
 
 <script type="text/javascript">
-    const API_KEY = "RGAPI-e194d625-386d-4c14-8948-ba03f3115163";
+    const API_KEY = "RGAPI-00b48014-0879-45f6-acba-a82a1b536215";
 
     async function CheckStatus() {
         const Region = document.getElementById('selected_region');
         const Tag = Region.options[Region.selectedIndex].text;
         var URL = "https://" + Tag + ".api.riotgames.com/lol/status/v4/platform-data?api_key=" + API_KEY;
+      //  alert(URL)
         const data = await fetch(URL);
         const status = await data.json();
         var Str = "Response: "
